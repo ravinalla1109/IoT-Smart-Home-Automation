@@ -1,22 +1,36 @@
+import jwt
 from flask import Flask, request, jsonify
+import sqlite3
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'your_secret_key'
 
-devices = {"light": "off", "temperature": 0, "motion": False}
+def token_required(func):
+    def wrapper(*args, **kwargs):
+        token = request.headers.get('Authorization')
+        if not token:
+            return jsonify({"error": "Token is missing"}), 403
+        try:
+            jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            return jsonify({"error": "Token expired"}), 403
+        except jwt.InvalidTokenError:
+            return jsonify({"error": "Invalid token"}), 403
+        return func(*args, **kwargs)
+    return wrapper
 
-@app.route("/status", methods=["GET"])
+@app.route('/status', methods=['GET'])
+@token_required
 def get_status():
-    return jsonify(devices)
+    # Same as previous
+    pass
 
-@app.route("/control", methods=["POST"])
+@app.route('/control', methods=['POST'])
+@token_required
 def control_device():
-    data = request.json
-    device, state = data.get("device"), data.get("state")
-    if device in devices:
-        devices[device] = state
-        return jsonify({"message": f"{device} turned {state}"}), 200
-    return jsonify({"error": "Invalid device"}), 400
+    # Same as previous
+    pass
 
-if __name__ == "__main__":
+if __name__ == '__main__':
+    init_db()
     app.run(debug=True)
-

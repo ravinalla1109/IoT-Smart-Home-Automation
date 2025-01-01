@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IoT Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>IoT Dashboard</h1>
+    <ul>
+        {% for device, state in devices %}
+        <li>{{ device }}: {{ state }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

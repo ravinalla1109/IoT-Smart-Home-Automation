@@ -1,15 +1,12 @@
 import random
 import time
-import requests
 
-BASE_URL = "http://127.0.0.1:5000"
-
-def get_temperature():
-    return round(random.uniform(20.0, 30.0), 2)
+def generate_temp_humidity():
+    while True:
+        temp = random.uniform(15, 30)  # Generate random temperature
+        humidity = random.uniform(30, 70)  # Generate random humidity
+        print(f"Temperature: {temp:.2f}°C, Humidity: {humidity:.2f}%")
+        time.sleep(5)
 
 if __name__ == "__main__":
-    while True:
-        temp = get_temperature()
-        response = requests.post(f"{BASE_URL}/control", json={"device": "temperature", "state": temp})
-        print(f"Temperature Sent: {temp}, Response: {response.json()}")
-        time.sleep(5)
+    generate_temp_humidity()
